@@ -1,38 +1,163 @@
-.App {
-  text-align: center;
+/* ---------- Global reset & design tokens ---------- */
+:root {
+  --bg-start: #111827;   /* dark slate */
+  --bg-end:   #1e3a8a;   /* indigo-800 */
+  --glow-1:   #ec4899;   /* pink-500 */
+  --glow-2:   #22d3ee;   /* cyan-400 */
+  --glow-3:   #a855f7;   /* violet-500 */
+
+  --card-bg: #ffffff;
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --input-border: #d1d5db;
+  --text: #111827;
+
+  --radius: 12px;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --max-width: 360px;
 }
 
-.App-logo {
-  height: 40vmin;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 60px;
+  background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+  overflow: hidden;            /* hide glow spill */
+}
+
+/* ---------- Neon animated blobs ---------- */
+body::before,
+body::after {
+  content: "";
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.6;
+  animation: float 18s linear infinite;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body::before {
+  background: var(--glow-1);
+  top: -120px;
+  left: -160px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+body::after {
+  background: var(--glow-2);
+  bottom: -160px;
+  right: -120px;
+  animation-delay: 9s;
+}
+
+/* Add a third blob via pseudo on .App for depth */
+.App::before {
+  content: "";
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: var(--glow-3);
+  filter: blur(100px);
+  opacity: 0.5;
+  top: -140px;
+  right: 50%;
+  transform: translateX(180px);
+  animation: float 22s linear infinite reverse;
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%   { transform: translateY(0)   scale(1); }
+  50%  { transform: translateY(60px) scale(1.1); }
+  100% { transform: translateY(0)   scale(1); }
+}
+
+/* ---------- Main wrapper ---------- */
+.App {
+  position: relative;        /* so .App::before is scoped */
+  width: var(--max-width);
+  z-index: 1;                /* sit above neon blobs */
+}
+
+/* ---------- Typography & layout ---------- */
+h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem;
+  text-align: center;
+  color: #f3f4f6;            /* light heading for contrast */
+}
+
+/* ---------- Card / form ---------- */
+.form {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 2rem 1.75rem 1.5rem;
+  box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 1rem;
 }
 
-.App-link {
-  color: #61dafb;
+/* Inputs */
+.form input {
+  padding: 0.75rem 0.875rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border 0.2s ease;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.form input:focus {
+  border-color: var(--primary);
 }
+
+/* Button */
+.form button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--primary);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.form button:hover { background: var(--primary-dark); }
+.form button:active { transform: translateY(1px); }
+
+/* Toggle line */
+.App p {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #e5e7eb;           /* lighter body text */
+}
+
+.App p button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.App p button:hover { text-decoration: underline; }
